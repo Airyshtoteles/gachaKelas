@@ -1,0 +1,332 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+/* Theme CSS Variables */
+:root {
+  /* Default: Retro Purple Theme */
+  --bg-primary: #1a1a2e;
+  --bg-secondary: #16213e;
+  --bg-tertiary: #0f3460;
+  --accent-primary: #e94560;
+  --accent-secondary: #9b59b6;
+  --text-primary: #eaeaea;
+  --text-secondary: #a0a0a0;
+  --border-color: #3a3a5a;
+  
+  /* Retro Colors for Wheel */
+  --wheel-1: #FF6B6B;
+  --wheel-2: #4ECDC4;
+  --wheel-3: #FFE66D;
+  --wheel-4: #95E1D3;
+  --wheel-5: #F38181;
+  --wheel-6: #AA96DA;
+  --wheel-7: #FCBAD3;
+  --wheel-8: #A8D8EA;
+  --wheel-9: #C9E4DE;
+  --wheel-10: #FAAB78;
+}
+
+/* GameBoy Green Theme */
+[data-theme="gameboy"] {
+  --bg-primary: #0f380f;
+  --bg-secondary: #306230;
+  --bg-tertiary: #8bac0f;
+  --accent-primary: #9bbc0f;
+  --accent-secondary: #cadc9f;
+  --text-primary: #9bbc0f;
+  --text-secondary: #8bac0f;
+  --border-color: #306230;
+}
+
+/* Arcade Neon Theme */
+[data-theme="neon"] {
+  --bg-primary: #0d0d0d;
+  --bg-secondary: #1a1a1a;
+  --bg-tertiary: #2a2a2a;
+  --accent-primary: #00d4ff;
+  --accent-secondary: #ff00ff;
+  --text-primary: #ffffff;
+  --text-secondary: #00d4ff;
+  --border-color: #00d4ff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Press Start 2P', cursive;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Pixel Border Utility */
+.pixel-border {
+  border: 4px solid var(--border-color);
+  box-shadow: 
+    4px 4px 0 0 var(--border-color),
+    inset -4px -4px 0 0 rgba(0,0,0,0.2);
+}
+
+.pixel-border-accent {
+  border: 4px solid var(--accent-primary);
+  box-shadow: 
+    4px 4px 0 0 var(--accent-primary),
+    inset -4px -4px 0 0 rgba(0,0,0,0.2);
+}
+
+/* Retro Button */
+.retro-btn {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.7rem;
+  padding: 12px 20px;
+  background: var(--accent-primary);
+  color: var(--text-primary);
+  border: 4px solid var(--border-color);
+  box-shadow: 4px 4px 0 0 #000;
+  cursor: pointer;
+  transition: all 0.1s ease;
+  text-transform: uppercase;
+}
+
+.retro-btn:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 0 #000;
+}
+
+.retro-btn:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0 0 0 0 #000;
+}
+
+.retro-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.retro-btn-secondary {
+  background: var(--bg-secondary);
+}
+
+.retro-btn-danger {
+  background: #c0392b;
+}
+
+.retro-btn-success {
+  background: #27ae60;
+}
+
+/* Input Styling */
+.retro-input {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.6rem;
+  padding: 12px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 4px solid var(--border-color);
+  outline: none;
+  width: 100%;
+}
+
+.retro-input:focus {
+  border-color: var(--accent-primary);
+}
+
+.retro-input::placeholder {
+  color: var(--text-secondary);
+}
+
+/* Textarea */
+.retro-textarea {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.5rem;
+  line-height: 1.8;
+  padding: 12px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 4px solid var(--border-color);
+  outline: none;
+  resize: vertical;
+  min-height: 150px;
+}
+
+.retro-textarea:focus {
+  border-color: var(--accent-primary);
+}
+
+/* Animations */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { 
+    filter: drop-shadow(0 0 10px var(--accent-primary));
+  }
+  50% { 
+    filter: drop-shadow(0 0 30px var(--accent-primary)) drop-shadow(0 0 60px var(--accent-primary));
+  }
+}
+
+@keyframes pop-in {
+  0% { transform: scale(0); opacity: 0; }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes confetti-fall {
+  0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+@keyframes blink {
+  0%, 50%, 100% { opacity: 1; }
+  25%, 75% { opacity: 0; }
+}
+
+@keyframes screen-shake {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(-3px, 3px); }
+  50% { transform: translate(3px, -3px); }
+  75% { transform: translate(-3px, -3px); }
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 1s ease-in-out infinite;
+}
+
+.animate-pop-in {
+  animation: pop-in 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out;
+}
+
+.animate-blink {
+  animation: blink 1s step-end infinite;
+}
+
+.animate-screen-shake {
+  animation: screen-shake 0.3s ease-in-out;
+}
+
+/* Confetti Styles */
+.confetti {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  pointer-events: none;
+  animation: confetti-fall 3s linear forwards;
+}
+
+/* Toggle Switch */
+.toggle-switch {
+  position: relative;
+  width: 60px;
+  height: 30px;
+  background: var(--bg-secondary);
+  border: 3px solid var(--border-color);
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.toggle-switch.active {
+  background: var(--accent-primary);
+}
+
+.toggle-switch::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: var(--text-primary);
+  top: 2px;
+  left: 2px;
+  transition: left 0.3s ease;
+}
+
+.toggle-switch.active::after {
+  left: 34px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent-primary);
+  border: 2px solid var(--bg-secondary);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .retro-btn {
+    font-size: 0.5rem;
+    padding: 10px 16px;
+  }
+  
+  .retro-input {
+    font-size: 0.5rem;
+    padding: 10px;
+  }
+}
+
+/* Wheel Segment Highlight */
+.segment-winner {
+  filter: drop-shadow(0 0 20px gold) drop-shadow(0 0 40px gold);
+  animation: pulse-glow 0.5s ease-in-out 3;
+}
+
+/* Panel Styles */
+.retro-panel {
+  background: var(--bg-secondary);
+  border: 4px solid var(--border-color);
+  padding: 16px;
+}
+
+.retro-panel-title {
+  font-size: 0.7rem;
+  color: var(--accent-primary);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  backdrop-filter: blur(4px);
+}
+
+/* Seed Display */
+.seed-display {
+  font-size: 0.5rem;
+  color: var(--text-secondary);
+  letter-spacing: 2px;
+}
