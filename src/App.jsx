@@ -9,6 +9,7 @@ import GroupRandomizer from './components/GroupRandomizer';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { useSound } from './hooks/useSound';
 import { shuffleColors, RETRO_COLORS } from './utils/colors';
+import { useToast } from './components/Toast';
 import './index.css';
 
 // Default sample members
@@ -350,6 +351,7 @@ export default function App() {
 
 // Group Randomizer Panel Component
 function GroupRandomizerPanel({ members, soundEnabled }) {
+  const toast = useToast();
   const [groupCount, setGroupCount] = useState(2);
   const [groups, setGroups] = useState([]);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -369,11 +371,11 @@ function GroupRandomizerPanel({ members, soundEnabled }) {
 
   const startRandomize = () => {
     if (members.length < 2) {
-      alert('Minimal 2 anggota dibutuhkan!');
+      toast.warning('Minimal 2 anggota dibutuhkan!');
       return;
     }
     if (members.length < groupCount) {
-      alert(`Minimal ${groupCount} anggota untuk ${groupCount} kelompok!`);
+      toast.warning(`Minimal ${groupCount} anggota untuk ${groupCount} kelompok!`);
       return;
     }
 

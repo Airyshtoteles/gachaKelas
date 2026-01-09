@@ -1,4 +1,5 @@
 import { exportToTxt } from '../utils/export';
+import { useToast } from './Toast';
 
 export default function HistoryPanel({
     history,
@@ -6,12 +7,15 @@ export default function HistoryPanel({
     onReset,
     mode
 }) {
+    const toast = useToast();
+
     const handleExport = () => {
         if (history.length === 0) {
-            alert('No history to export!');
+            toast.warning('Tidak ada history untuk di-export!');
             return;
         }
         exportToTxt(history);
+        toast.success('History berhasil di-export!');
     };
 
     return (

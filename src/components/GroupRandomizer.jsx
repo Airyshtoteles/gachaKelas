@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { RETRO_COLORS } from '../utils/colors';
+import { useToast } from './Toast';
 
 export default function GroupRandomizer({
     members,
     onClose,
     soundEnabled
 }) {
+    const toast = useToast();
     const [groupCount, setGroupCount] = useState(2);
     const [groups, setGroups] = useState([]);
     const [isAnimating, setIsAnimating] = useState(false);
@@ -27,7 +29,7 @@ export default function GroupRandomizer({
     // Start randomization with animation
     const startRandomize = () => {
         if (members.length < groupCount) {
-            alert(`Minimum ${groupCount} members needed for ${groupCount} groups!`);
+            toast.warning(`Minimal ${groupCount} anggota untuk ${groupCount} kelompok!`);
             return;
         }
 

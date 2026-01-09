@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useToast } from './Toast';
 
 export default function MemberManager({
     members,
@@ -6,6 +7,7 @@ export default function MemberManager({
     mode,
     onOpenImport
 }) {
+    const toast = useToast();
     const [newName, setNewName] = useState('');
     const [editingId, setEditingId] = useState(null);
     const [editValue, setEditValue] = useState('');
@@ -16,7 +18,7 @@ export default function MemberManager({
 
         // Check for duplicates
         if (members.some(m => m.name.toLowerCase() === trimmed.toLowerCase())) {
-            alert('Member already exists!');
+            toast.warning('Member sudah ada!');
             return;
         }
 
@@ -48,7 +50,7 @@ export default function MemberManager({
 
         // Check for duplicates (excluding current)
         if (members.some(m => m.id !== editingId && m.name.toLowerCase() === trimmed.toLowerCase())) {
-            alert('Member name already exists!');
+            toast.warning('Nama member sudah ada!');
             return;
         }
 

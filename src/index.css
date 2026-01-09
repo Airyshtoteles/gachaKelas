@@ -1,5 +1,14 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+/* Google Fonts dengan subset lengkap dan font-display swap untuk loading yang lebih baik */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap&subset=latin,latin-ext');
+
+/* Font fallback yang kompatibel dengan semua device */
+@font-face {
+  font-family: 'Press Start 2P Fallback';
+  src: local('Courier New'), local('Courier'), local('monospace');
+  font-display: swap;
+}
 
 /* Theme CSS Variables */
 :root {
@@ -12,7 +21,7 @@
   --text-primary: #eaeaea;
   --text-secondary: #a0a0a0;
   --border-color: #3a3a5a;
-  
+
   /* Retro Colors for Wheel */
   --wheel-1: #FF6B6B;
   --wheel-2: #4ECDC4;
@@ -57,32 +66,37 @@
 }
 
 body {
-  font-family: 'Press Start 2P', cursive;
+  font-family: 'Press Start 2P', 'Press Start 2P Fallback', 'Courier New', Courier, monospace;
   background-color: var(--bg-primary);
   color: var(--text-primary);
   min-height: 100vh;
   overflow-x: hidden;
+  /* Webkit font smoothing untuk tampilan lebih baik di mobile */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Text rendering untuk pixel font */
+  text-rendering: optimizeLegibility;
 }
 
 /* Pixel Border Utility */
 .pixel-border {
   border: 4px solid var(--border-color);
-  box-shadow: 
+  box-shadow:
     4px 4px 0 0 var(--border-color),
-    inset -4px -4px 0 0 rgba(0,0,0,0.2);
+    inset -4px -4px 0 0 rgba(0, 0, 0, 0.2);
 }
 
 .pixel-border-accent {
   border: 4px solid var(--accent-primary);
-  box-shadow: 
+  box-shadow:
     4px 4px 0 0 var(--accent-primary),
-    inset -4px -4px 0 0 rgba(0,0,0,0.2);
+    inset -4px -4px 0 0 rgba(0, 0, 0, 0.2);
 }
 
 /* Retro Button */
 .retro-btn {
-  font-family: 'Press Start 2P', cursive;
-  font-size: 0.7rem;
+  font-family: 'Press Start 2P', 'Courier New', Courier, monospace;
+  font-size: 0.75rem;
   padding: 12px 20px;
   background: var(--accent-primary);
   color: var(--text-primary);
@@ -122,8 +136,8 @@ body {
 
 /* Input Styling */
 .retro-input {
-  font-family: 'Press Start 2P', cursive;
-  font-size: 0.6rem;
+  font-family: 'Press Start 2P', 'Courier New', Courier, monospace;
+  font-size: 0.65rem;
   padding: 12px;
   background: var(--bg-secondary);
   color: var(--text-primary);
@@ -142,9 +156,9 @@ body {
 
 /* Textarea */
 .retro-textarea {
-  font-family: 'Press Start 2P', cursive;
-  font-size: 0.5rem;
-  line-height: 1.8;
+  font-family: 'Press Start 2P', 'Courier New', Courier, monospace;
+  font-size: 0.6rem;
+  line-height: 2;
   padding: 12px;
   background: var(--bg-secondary);
   color: var(--text-primary);
@@ -160,46 +174,112 @@ body {
 
 /* Animations */
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-  20%, 40%, 60%, 80% { transform: translateX(5px); }
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-5px);
+  }
+
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(5px);
+  }
 }
 
 @keyframes pulse-glow {
-  0%, 100% { 
+
+  0%,
+  100% {
     filter: drop-shadow(0 0 10px var(--accent-primary));
   }
-  50% { 
+
+  50% {
     filter: drop-shadow(0 0 30px var(--accent-primary)) drop-shadow(0 0 60px var(--accent-primary));
   }
 }
 
 @keyframes pop-in {
-  0% { transform: scale(0); opacity: 0; }
-  50% { transform: scale(1.2); }
-  100% { transform: scale(1); opacity: 1; }
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+
+  50% {
+    transform: scale(1.2);
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 @keyframes slide-up {
-  from { transform: translateY(100%); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 @keyframes confetti-fall {
-  0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
-  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  0% {
+    transform: translateY(-100vh) rotate(0deg);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
 }
 
 @keyframes blink {
-  0%, 50%, 100% { opacity: 1; }
-  25%, 75% { opacity: 0; }
+
+  0%,
+  50%,
+  100% {
+    opacity: 1;
+  }
+
+  25%,
+  75% {
+    opacity: 0;
+  }
 }
 
 @keyframes screen-shake {
-  0%, 100% { transform: translate(0, 0); }
-  25% { transform: translate(-3px, 3px); }
-  50% { transform: translate(3px, -3px); }
-  75% { transform: translate(-3px, -3px); }
+
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  25% {
+    transform: translate(-3px, 3px);
+  }
+
+  50% {
+    transform: translate(3px, -3px);
+  }
+
+  75% {
+    transform: translate(-3px, -3px);
+  }
 }
 
 .animate-shake {
@@ -281,14 +361,46 @@ body {
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
-  .retro-btn {
-    font-size: 0.5rem;
-    padding: 10px 16px;
+
+  /* Ukuran font yang lebih besar untuk keterbacaan di mobile */
+  body {
+    font-size: 14px;
   }
-  
+
+  .retro-btn {
+    font-size: 0.6rem;
+    padding: 12px 18px;
+    /* Touch-friendly tap target (minimum 44px) */
+    min-height: 44px;
+    min-width: 44px;
+  }
+
   .retro-input {
-    font-size: 0.5rem;
-    padding: 10px;
+    font-size: 0.6rem;
+    padding: 12px;
+    /* Touch-friendly tap target */
+    min-height: 44px;
+  }
+
+  .retro-textarea {
+    font-size: 0.55rem;
+    line-height: 2.2;
+  }
+
+  .retro-panel-title {
+    font-size: 0.65rem;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  .retro-btn {
+    font-size: 0.55rem;
+    padding: 10px 14px;
+  }
+
+  .retro-input {
+    font-size: 0.55rem;
   }
 }
 
@@ -329,4 +441,193 @@ body {
   font-size: 0.5rem;
   color: var(--text-secondary);
   letter-spacing: 2px;
+}
+
+/* ==================== */
+/* Toast Notifications  */
+/* ==================== */
+
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: none;
+}
+
+.toast-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  min-width: 280px;
+  max-width: 400px;
+  background: var(--bg-secondary);
+  border: 4px solid var(--border-color);
+  box-shadow:
+    6px 6px 0 0 rgba(0, 0, 0, 0.8),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  pointer-events: auto;
+  overflow: hidden;
+}
+
+.toast-icon {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  font-weight: bold;
+  background: var(--bg-tertiary);
+  border: 2px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.toast-message {
+  flex: 1;
+  font-size: 0.55rem;
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+
+/* Toast Types */
+.toast-info {
+  border-color: var(--accent-secondary);
+}
+
+.toast-info .toast-icon {
+  background: var(--accent-secondary);
+  color: #fff;
+  border-color: var(--accent-secondary);
+}
+
+.toast-info .toast-progress-bar {
+  background: var(--accent-secondary);
+}
+
+.toast-success {
+  border-color: #27ae60;
+}
+
+.toast-success .toast-icon {
+  background: #27ae60;
+  color: #fff;
+  border-color: #27ae60;
+}
+
+.toast-success .toast-progress-bar {
+  background: #27ae60;
+}
+
+.toast-warning {
+  border-color: #f39c12;
+}
+
+.toast-warning .toast-icon {
+  background: #f39c12;
+  color: #000;
+  border-color: #f39c12;
+}
+
+.toast-warning .toast-progress-bar {
+  background: #f39c12;
+}
+
+.toast-error {
+  border-color: #e74c3c;
+}
+
+.toast-error .toast-icon {
+  background: #e74c3c;
+  color: #fff;
+  border-color: #e74c3c;
+}
+
+.toast-error .toast-progress-bar {
+  background: #e74c3c;
+}
+
+/* Progress Bar */
+.toast-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.toast-progress-bar {
+  height: 100%;
+  width: 100%;
+  animation: toast-countdown linear forwards;
+  transform-origin: left;
+}
+
+@keyframes toast-countdown {
+  from {
+    transform: scaleX(1);
+  }
+
+  to {
+    transform: scaleX(0);
+  }
+}
+
+/* Toast Animations */
+.toast-enter {
+  animation: toast-slide-in 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.toast-exit {
+  animation: toast-slide-out 0.3s ease-in forwards;
+}
+
+@keyframes toast-slide-in {
+  0% {
+    opacity: 0;
+    transform: translateX(100%) scale(0.8);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes toast-slide-out {
+  0% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(100%) scale(0.8);
+  }
+}
+
+/* Mobile positioning */
+@media (max-width: 768px) {
+  .toast-container {
+    top: auto;
+    bottom: 20px;
+    left: 16px;
+    right: 16px;
+  }
+
+  .toast-item {
+    min-width: auto;
+    max-width: none;
+  }
+
+  .toast-message {
+    font-size: 0.5rem;
+  }
 }
