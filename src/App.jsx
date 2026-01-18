@@ -133,13 +133,14 @@ export default function App() {
   }, [isSpinning, members.length, activeTab]);
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: 'var(--bg-primary)' }}>
+    <div className="min-h-screen flex flex-col">
       {/* Header */}
       <header
         className="text-center py-4 px-6"
         style={{
-          background: 'var(--bg-secondary)',
-          borderBottom: '4px solid var(--border-color)'
+          background: 'rgba(22, 33, 62, 0.8)',
+          borderBottom: '4px solid var(--border-color)',
+          backdropFilter: 'blur(10px)'
         }}
       >
         <h1
@@ -308,9 +309,10 @@ export default function App() {
       <footer
         className="text-center py-3 px-4"
         style={{
-          background: 'var(--bg-secondary)',
+          background: 'rgba(22, 33, 62, 0.8)',
           borderTop: '2px solid var(--border-color)',
-          color: 'var(--text-secondary)'
+          color: 'var(--text-secondary)',
+          backdropFilter: 'blur(10px)'
         }}
       >
         <p style={{ fontSize: '0.35rem' }}>
