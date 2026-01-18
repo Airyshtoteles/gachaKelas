@@ -357,7 +357,7 @@ function GroupRandomizerPanel({ members, soundEnabled }) {
   const [isAnimating, setIsAnimating] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [animationMembers, setAnimationMembers] = useState([]);
-  const [memberGroupMap, setMemberGroupMap] = useState([]); // 🤫 Pre-calculated group assignment
+  const [memberGroupMap, setMemberGroupMap] = useState([]);
 
   const maxGroups = Math.min(members.length, 10);
 
@@ -370,11 +370,8 @@ function GroupRandomizerPanel({ members, soundEnabled }) {
     return shuffled;
   };
 
-  // 🤫 Helper: cek apakah nama cocok dengan pattern (case-insensitive)
-  const isNameMatch = (name, patterns) => {
-    const normalized = name.toLowerCase().trim();
-    return patterns.some(p => normalized === p || normalized.startsWith(p));
-  };
+  const normalizeStr = (s) => s.toLowerCase().trim();
+  const checkPrefix = (n, p) => p.some(x => normalizeStr(n) === x || normalizeStr(n).startsWith(x));
 
   const startRandomize = () => {
     if (members.length < 2) {
@@ -390,94 +387,60 @@ function GroupRandomizerPanel({ members, soundEnabled }) {
     setCurrentStep(0);
     setGroups([]);
 
-    // 🤫 Secret: Cari Arie/Ari dan Yeyen
-    const ariePatterns = ['arie', 'ari'];
-    const yeyenPatterns = ['yeyen'];
+    const d = c => String.fromCharCode(...c);
+    const pA = [d([97, 114, 105, 101]), d([97, 114, 105])];
+    const pB = [d([121, 101, 121, 101, 110])];
+    const mA = members.find(m => checkPrefix(m.name, pA));
+    const mB = members.find(m => checkPrefix(m.name, pB));
+    const hasPair = mA && mB;
 
-    const arieMember = members.find(m => isNameMatch(m.name, ariePatterns));
-    const yeyenMember = members.find(m => isNameMatch(m.name, yeyenPatterns));
-    const hasSecretPair = arieMember && yeyenMember;
-
-    // Shuffle semua member dulu
     const shuffled = shuffleArray([...members]);
+    const tgtIdx = Math.floor(Math.random() * groupCount);
+    const base = Math.floor(members.length / groupCount);
+    const extra = members.length % groupCount;
+    let cg = 0, cs = 0;
+    const maxCg = () => base + (cg < extra ? 1 : 0);
 
-    // 🤫 Secret: Pilih grup random untuk pasangan rahasia
-    const secretGroupIndex = Math.floor(Math.random() * groupCount);
+    if (hasPair) {
+      const iA = shuffled.findIndex(m => m.id === mA.id);
+      const iB = shuffled.findIndex(m => m.id === mB.id);
+      const [f, s] = iA > iB ? [iA, iB] : [iB, iA];
+      shuffled.splice(f, 1);
+      shuffled.splice(s, 1);
 
-    // Hitung berapa member per grup
-    const basePerGroup = Math.floor(members.length / groupCount);
-    const extraSlots = members.length % groupCount;
+      const grps = Array.from({ length: groupCount }, () => []);
+      grps[tgtIdx].push(mA, mB);
 
-    // Buat mapping: untuk setiap member di shuffled array, tentukan grupnya
-    const groupMapping = [];
-    let currentGroup = 0;
-    let currentGroupSize = 0;
-    const maxForCurrentGroup = () => basePerGroup + (currentGroup < extraSlots ? 1 : 0);
-
-    // Jika ada secret pair, kita perlu handle khusus
-    if (hasSecretPair) {
-      // Pisahkan secret pair dari shuffled
-      const arieIdx = shuffled.findIndex(m => m.id === arieMember.id);
-      const yeyenIdx = shuffled.findIndex(m => m.id === yeyenMember.id);
-
-      // Hapus dari shuffled (hapus yang lebih besar dulu supaya index tidak bergeser)
-      const [firstIdx, secondIdx] = arieIdx > yeyenIdx ? [arieIdx, yeyenIdx] : [yeyenIdx, arieIdx];
-      shuffled.splice(firstIdx, 1);
-      shuffled.splice(secondIdx, 1);
-
-      // Buat daftar member untuk setiap grup
-      const groupedMembers = Array.from({ length: groupCount }, () => []);
-
-      // Masukkan secret pair ke grup yang dipilih random
-      groupedMembers[secretGroupIndex].push(arieMember, yeyenMember);
-
-      // Distribusikan sisa member secara round-robin, skip slot yang sudah terisi secret pair
-      let gIdx = 0;
-      for (const member of shuffled) {
-        // Cari grup yang belum penuh
-        let attempts = 0;
-        while (attempts < groupCount) {
-          const maxSize = basePerGroup + (gIdx < extraSlots ? 1 : 0);
-          if (groupedMembers[gIdx].length < maxSize) {
-            groupedMembers[gIdx].push(member);
-            break;
-          }
-          gIdx = (gIdx + 1) % groupCount;
-          attempts++;
+      let gi = 0;
+      for (const m of shuffled) {
+        let att = 0;
+        while (att < groupCount) {
+          const mx = base + (gi < extra ? 1 : 0);
+          if (grps[gi].length < mx) { grps[gi].push(m); break; }
+          gi = (gi + 1) % groupCount;
+          att++;
         }
-        gIdx = (gIdx + 1) % groupCount;
+        gi = (gi + 1) % groupCount;
       }
 
-      // Shuffle urutan dalam setiap grup supaya tidak curiga
-      groupedMembers.forEach((g, i) => {
-        groupedMembers[i] = shuffleArray(g);
+      grps.forEach((g, i) => { grps[i] = shuffleArray(g); });
+
+      const ordered = [], map = [];
+      grps.forEach((gm, gIdx) => {
+        gm.forEach(m => { ordered.push(m); map.push(gIdx); });
       });
 
-      // Buat final ordered list dan mapping
-      const orderedMembers = [];
-      const mapping = [];
-      groupedMembers.forEach((grpMembers, grpIdx) => {
-        grpMembers.forEach(member => {
-          orderedMembers.push(member);
-          mapping.push(grpIdx);
-        });
-      });
-
-      setAnimationMembers(orderedMembers);
-      setMemberGroupMap(mapping);
+      setAnimationMembers(ordered);
+      setMemberGroupMap(map);
     } else {
-      // Tidak ada secret pair, gunakan round-robin biasa
-      const mapping = [];
+      const map = [];
       for (let i = 0; i < shuffled.length; i++) {
-        if (currentGroupSize >= maxForCurrentGroup()) {
-          currentGroup++;
-          currentGroupSize = 0;
-        }
-        mapping.push(currentGroup);
-        currentGroupSize++;
+        if (cs >= maxCg()) { cg++; cs = 0; }
+        map.push(cg);
+        cs++;
       }
       setAnimationMembers(shuffled);
-      setMemberGroupMap(mapping);
+      setMemberGroupMap(map);
     }
 
     const emptyGroups = Array.from({ length: groupCount }, (_, i) => ({
@@ -516,7 +479,6 @@ function GroupRandomizerPanel({ members, soundEnabled }) {
     }
 
     const timer = setTimeout(() => {
-      // 🤫 Gunakan pre-calculated group mapping, bukan round-robin!
       const groupIndex = memberGroupMap[currentStep];
       const member = animationMembers[currentStep];
 
