@@ -12,8 +12,11 @@ export default function MemberManager({
     const [editingId, setEditingId] = useState(null);
     const [editValue, setEditValue] = useState('');
 
+    // Strip numbered prefixes like "1. name", "2) name", "12- name"
+    const stripNumberPrefix = (name) => name.replace(/^\d+[\.\)\-]\s*/, '').trim();
+
     const addMember = () => {
-        const trimmed = newName.trim();
+        const trimmed = stripNumberPrefix(newName.trim());
         if (!trimmed) return;
 
         // Check for duplicates

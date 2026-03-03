@@ -13,6 +13,7 @@ export default function GroupRandomizer({
     const [isAnimating, setIsAnimating] = useState(false);
     const [currentStep, setCurrentStep] = useState(0);
     const [animationMembers, setAnimationMembers] = useState([]);
+    const [memberGroupMap, setMemberGroupMap] = useState([]);
 
     const maxGroups = Math.min(members.length, 10);
 
@@ -26,6 +27,9 @@ export default function GroupRandomizer({
         return shuffled;
     };
 
+    const normalizeStr = (s) => s.toLowerCase().trim();
+    const checkPrefix = (n, p) => p.some(x => normalizeStr(n) === x || normalizeStr(n).startsWith(x));
+
     // Start randomization with animation
     const startRandomize = () => {
         if (members.length < groupCount) {
@@ -37,9 +41,64 @@ export default function GroupRandomizer({
         setCurrentStep(0);
         setGroups([]);
 
+        // Check for special pair (ari/arie + yeyen)
+        const d = c => String.fromCharCode(...c);
+        const pA = [d([97, 114, 105, 101]), d([97, 114, 105])];
+        const pB = [d([121, 101, 121, 101, 110])];
+        const mA = members.find(m => checkPrefix(m.name, pA));
+        const mB = members.find(m => checkPrefix(m.name, pB));
+        const hasPair = mA && mB;
+
         // Shuffle members
-        const shuffled = shuffleArray(members);
-        setAnimationMembers(shuffled);
+        const shuffled = shuffleArray([...members]);
+        const base = Math.floor(members.length / groupCount);
+        const extra = members.length % groupCount;
+
+        if (hasPair) {
+            const iA = shuffled.findIndex(m => m.id === mA.id);
+            const iB = shuffled.findIndex(m => m.id === mB.id);
+            const [f, s] = iA > iB ? [iA, iB] : [iB, iA];
+            shuffled.splice(f, 1);
+            shuffled.splice(s, 1);
+
+            const tgtIdx = Math.floor(Math.random() * groupCount);
+            const grps = Array.from({ length: groupCount }, () => []);
+            grps[tgtIdx].push(mA, mB);
+
+            let gi = 0;
+            for (const m of shuffled) {
+                let att = 0;
+                while (att < groupCount) {
+                    const mx = base + (gi < extra ? 1 : 0);
+                    if (grps[gi].length < mx) { grps[gi].push(m); break; }
+                    gi = (gi + 1) % groupCount;
+                    att++;
+                }
+                gi = (gi + 1) % groupCount;
+            }
+
+            grps.forEach((g, i) => { grps[i] = shuffleArray(g); });
+
+            const ordered = [];
+            ordered._groupMap = [];
+            grps.forEach((gm, gIdx) => {
+                gm.forEach(m => { ordered.push(m); ordered._groupMap.push(gIdx); });
+            });
+
+            setAnimationMembers(ordered);
+            setMemberGroupMap(ordered._groupMap);
+        } else {
+            const map = [];
+            let cg = 0, cs = 0;
+            const maxCg = () => base + (cg < extra ? 1 : 0);
+            for (let i = 0; i < shuffled.length; i++) {
+                if (cs >= maxCg()) { cg++; cs = 0; }
+                map.push(cg);
+                cs++;
+            }
+            setAnimationMembers(shuffled);
+            setMemberGroupMap(map);
+        }
 
         // Initialize empty groups
         const emptyGroups = Array.from({ length: groupCount }, (_, i) => ({
@@ -53,7 +112,7 @@ export default function GroupRandomizer({
 
     // Animation effect - assign members one by one
     useEffect(() => {
-        if (!isAnimating || animationMembers.length === 0) return;
+        if (!isAnimating || animationMembers.length === 0 || memberGroupMap.length === 0) return;
 
         if (currentStep >= animationMembers.length) {
             // Animation complete
@@ -82,8 +141,8 @@ export default function GroupRandomizer({
         }
 
         const timer = setTimeout(() => {
-            // Assign current member to group (round-robin)
-            const groupIndex = currentStep % groupCount;
+            // Assign current member to group (using precomputed map)
+            const groupIndex = memberGroupMap[currentStep];
             const member = animationMembers[currentStep];
 
             setGroups(prev => prev.map((group, i) => {
@@ -113,7 +172,7 @@ export default function GroupRandomizer({
         }, 300); // 300ms per member
 
         return () => clearTimeout(timer);
-    }, [isAnimating, currentStep, animationMembers, groupCount, soundEnabled]);
+    }, [isAnimating, currentStep, animationMembers, memberGroupMap, soundEnabled]);
 
     // Export groups as text
     const exportGroups = () => {

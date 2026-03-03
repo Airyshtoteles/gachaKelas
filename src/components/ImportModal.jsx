@@ -4,14 +4,17 @@ export default function ImportModal({ onClose, onImport, existingMembers }) {
     const [textValue, setTextValue] = useState('');
     const [preview, setPreview] = useState([]);
 
+    // Strip numbered prefixes like "1. name", "2) name", "12- name"
+    const stripNumberPrefix = (name) => name.replace(/^\d+[\.\)\-]\s*/, '').trim();
+
     const handleTextChange = (e) => {
         const value = e.target.value;
         setTextValue(value);
 
-        // Parse and preview
+        // Parse and preview (strip numbered prefixes)
         const names = value
             .split('\n')
-            .map(name => name.trim())
+            .map(name => stripNumberPrefix(name.trim()))
             .filter(name => name.length > 0);
 
         // Remove duplicates (case-insensitive)
