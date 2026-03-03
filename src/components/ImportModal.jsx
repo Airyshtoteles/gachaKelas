@@ -58,7 +58,7 @@ export default function ImportModal({ onClose, onImport, existingMembers }) {
 
                 <p
                     className="text-xs mb-4"
-                    style={{ color: 'var(--text-secondary)', fontSize: '0.5rem' }}
+                    style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}
                 >
                     Paste names (one per line). Duplicates will be removed automatically.
                 </p>
@@ -77,7 +77,7 @@ export default function ImportModal({ onClose, onImport, existingMembers }) {
                     <div className="mb-4">
                         <h3
                             className="text-xs mb-2"
-                            style={{ color: 'var(--accent-primary)', fontSize: '0.5rem' }}
+                            style={{ color: 'var(--accent-primary)', fontSize: '0.85rem' }}
                         >
                             ✓ Will import ({preview.length} new):
                         </h3>
@@ -87,7 +87,7 @@ export default function ImportModal({ onClose, onImport, existingMembers }) {
                                 background: 'var(--bg-tertiary)',
                                 maxHeight: '100px',
                                 overflow: 'auto',
-                                fontSize: '0.5rem'
+                                fontSize: '0.85rem'
                             }}
                         >
                             {preview.map((name, i) => (
@@ -103,7 +103,7 @@ export default function ImportModal({ onClose, onImport, existingMembers }) {
                 {textValue && preview.length === 0 && (
                     <p
                         className="text-xs mb-4"
-                        style={{ color: 'var(--accent-primary)', fontSize: '0.5rem' }}
+                        style={{ color: 'var(--accent-primary)', fontSize: '0.85rem' }}
                     >
                         ⚠️ All names are duplicates or already exist.
                     </p>

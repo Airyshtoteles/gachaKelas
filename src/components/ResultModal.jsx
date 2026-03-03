@@ -150,7 +150,7 @@ export default function ResultModal({
                     {/* Mode indicator */}
                     <p
                         className="mt-4 text-xs"
-                        style={{ color: 'var(--text-secondary)', fontSize: '0.45rem' }}
+                        style={{ color: 'var(--text-secondary)', fontSize: '0.8rem' }}
                     >
                         {mode === 'class' ? '🎓 Class Mode' : '🎮 Game Mode'}
                     </p>

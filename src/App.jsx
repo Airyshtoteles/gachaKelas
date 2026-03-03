@@ -9,6 +9,7 @@ import GroupRandomizer from './components/GroupRandomizer';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { useSound } from './hooks/useSound';
 import { shuffleColors, RETRO_COLORS } from './utils/colors';
+import { exportGroupsToPdf } from './utils/export';
 import { useToast } from './components/Toast';
 import './index.css';
 
@@ -155,14 +156,14 @@ export default function App() {
           <button
             onClick={() => setActiveTab('wheel')}
             className={`retro-btn ${activeTab === 'wheel' ? '' : 'retro-btn-secondary'}`}
-            style={{ fontSize: '0.45rem', padding: '8px 20px' }}
+            style={{ fontSize: '0.8rem', padding: '8px 20px' }}
           >
             🎡 Spin
           </button>
           <button
             onClick={() => setActiveTab('group')}
             className={`retro-btn ${activeTab === 'group' ? '' : 'retro-btn-secondary'}`}
-            style={{ fontSize: '0.45rem', padding: '8px 20px' }}
+            style={{ fontSize: '0.8rem', padding: '8px 20px' }}
           >
             🎲 Group
           </button>
@@ -315,7 +316,7 @@ export default function App() {
           backdropFilter: 'blur(10px)'
         }}
       >
-        <p style={{ fontSize: '0.35rem' }}>
+        <p style={{ fontSize: '0.7rem' }}>
           Made with ❤️ • {members.length} Members
         </p>
       </footer>
@@ -540,13 +541,13 @@ function GroupRandomizerPanel({ members, soundEnabled }) {
     <div className="retro-panel">
       <h2 className="retro-panel-title mb-4">🎲 Pembagian Kelompok</h2>
 
-      <p className="mb-4" style={{ color: 'var(--text-secondary)', fontSize: '0.4rem' }}>
+      <p className="mb-4" style={{ color: 'var(--text-secondary)', fontSize: '0.75rem' }}>
         Acak {members.length} anggota ke dalam kelompok secara adil
       </p>
 
       {/* Group Count */}
       <div className="mb-5 p-4 pixel-border" style={{ background: 'var(--bg-tertiary)' }}>
-        <label className="block mb-3" style={{ fontSize: '0.45rem', color: 'var(--text-secondary)' }}>
+        <label className="block mb-3" style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
           Jumlah Kelompok
         </label>
         <div className="flex items-center gap-4">
@@ -554,7 +555,7 @@ function GroupRandomizerPanel({ members, soundEnabled }) {
             onClick={() => setGroupCount(prev => Math.max(2, prev - 1))}
             disabled={isAnimating || groupCount <= 2}
             className="retro-btn retro-btn-secondary"
-            style={{ fontSize: '1rem', padding: '8px 16px' }}
+            style={{ fontSize: '1.25rem', padding: '8px 16px' }}
           >
             −
           </button>
@@ -562,7 +563,7 @@ function GroupRandomizerPanel({ members, soundEnabled }) {
             <span className="text-2xl block" style={{ color: 'var(--accent-primary)' }}>
               {groupCount}
             </span>
-            <span style={{ fontSize: '0.35rem', color: 'var(--text-secondary)' }}>
+            <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>
               ~{Math.ceil(members.length / groupCount)}/kelompok
             </span>
           </div>
@@ -570,7 +571,7 @@ function GroupRandomizerPanel({ members, soundEnabled }) {
             onClick={() => setGroupCount(prev => Math.min(maxGroups, prev + 1))}
             disabled={isAnimating || groupCount >= maxGroups}
             className="retro-btn retro-btn-secondary"
-            style={{ fontSize: '1rem', padding: '8px 16px' }}
+            style={{ fontSize: '1.25rem', padding: '8px 16px' }}
           >
             +
           </button>
@@ -583,7 +584,7 @@ function GroupRandomizerPanel({ members, soundEnabled }) {
         disabled={isAnimating || members.length < 2}
         className="retro-btn w-full mb-5"
         style={{
-          fontSize: '0.65rem',
+          fontSize: '0.95rem',
           padding: '14px',
           animation: !isAnimating ? 'pulse-glow 2s infinite' : 'none'
         }}
@@ -619,7 +620,7 @@ function GroupRandomizerPanel({ members, soundEnabled }) {
                 <h3 className="text-xs mb-2 flex items-center gap-2" style={{ color: group.color }}>
                   <span className="w-3 h-3" style={{ background: group.color }} />
                   {group.name}
-                  <span style={{ fontSize: '0.35rem', color: 'var(--text-secondary)' }}>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>
                     ({group.members.length})
                   </span>
                 </h3>
@@ -629,7 +630,7 @@ function GroupRandomizerPanel({ members, soundEnabled }) {
                       key={member.id}
                       className="py-1 px-2 animate-pop-in"
                       style={{
-                        fontSize: '0.45rem',
+                        fontSize: '0.8rem',
                         background: 'var(--bg-secondary)',
                         borderLeft: `3px solid ${group.color}`
                       }}
@@ -638,7 +639,7 @@ function GroupRandomizerPanel({ members, soundEnabled }) {
                     </div>
                   ))}
                   {group.members.length === 0 && (
-                    <p className="animate-blink" style={{ fontSize: '0.35rem', color: 'var(--text-secondary)' }}>
+                    <p className="animate-blink" style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>
                       Menunggu...
                     </p>
                   )}
@@ -654,7 +655,10 @@ function GroupRandomizerPanel({ members, soundEnabled }) {
                 🔄 Ulang
               </button>
               <button onClick={exportGroups} className="retro-btn retro-btn-success flex-1">
-                📤 Export
+                📤 TXT
+              </button>
+              <button onClick={() => exportGroupsToPdf(groups, members.length, groupCount)} className="retro-btn retro-btn-success flex-1">
+                📄 PDF
               </button>
             </div>
           )}
@@ -665,7 +669,7 @@ function GroupRandomizerPanel({ members, soundEnabled }) {
       {groups.length === 0 && !isAnimating && (
         <div className="text-center py-6 pixel-border" style={{ background: 'var(--bg-tertiary)' }}>
           <p className="text-3xl mb-2">🎲</p>
-          <p style={{ fontSize: '0.4rem', color: 'var(--text-secondary)' }}>
+          <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
             Klik tombol di atas untuk mengacak!
           </p>
         </div>

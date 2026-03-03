@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { RETRO_COLORS } from '../utils/colors';
+import { exportGroupsToPdf } from '../utils/export';
 import { useToast } from './Toast';
 
 export default function GroupRandomizer({
@@ -213,7 +214,7 @@ export default function GroupRandomizer({
                     <button
                         onClick={onClose}
                         className="retro-btn retro-btn-secondary"
-                        style={{ fontSize: '0.6rem', padding: '8px 12px' }}
+                        style={{ fontSize: '0.9rem', padding: '8px 12px' }}
                     >
                         ✕
                     </button>
@@ -221,7 +222,7 @@ export default function GroupRandomizer({
 
                 <p
                     className="text-xs mb-4"
-                    style={{ color: 'var(--text-secondary)', fontSize: '0.45rem' }}
+                    style={{ color: 'var(--text-secondary)', fontSize: '0.8rem' }}
                 >
                     Acak {members.length} anggota ke dalam kelompok secara adil
                 </p>
@@ -230,7 +231,7 @@ export default function GroupRandomizer({
                 <div className="mb-6">
                     <label
                         className="text-xs block mb-2"
-                        style={{ fontSize: '0.5rem', color: 'var(--text-secondary)' }}
+                        style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}
                     >
                         Jumlah Kelompok: {groupCount}
                     </label>
@@ -239,7 +240,7 @@ export default function GroupRandomizer({
                             onClick={() => setGroupCount(prev => Math.max(2, prev - 1))}
                             disabled={isAnimating || groupCount <= 2}
                             className="retro-btn retro-btn-secondary"
-                            style={{ fontSize: '1rem', padding: '8px 16px' }}
+                            style={{ fontSize: '1.25rem', padding: '8px 16px' }}
                         >
                             −
                         </button>
@@ -252,7 +253,7 @@ export default function GroupRandomizer({
                             </span>
                             <span
                                 className="block text-xs mt-1"
-                                style={{ fontSize: '0.4rem', color: 'var(--text-secondary)' }}
+                                style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}
                             >
                                 ~{Math.ceil(members.length / groupCount)} per kelompok
                             </span>
@@ -261,7 +262,7 @@ export default function GroupRandomizer({
                             onClick={() => setGroupCount(prev => Math.min(maxGroups, prev + 1))}
                             disabled={isAnimating || groupCount >= maxGroups}
                             className="retro-btn retro-btn-secondary"
-                            style={{ fontSize: '1rem', padding: '8px 16px' }}
+                            style={{ fontSize: '1.25rem', padding: '8px 16px' }}
                         >
                             +
                         </button>
@@ -274,7 +275,7 @@ export default function GroupRandomizer({
                     disabled={isAnimating || members.length < 2}
                     className="retro-btn w-full mb-6"
                     style={{
-                        fontSize: '0.7rem',
+                        fontSize: '1rem',
                         animation: !isAnimating ? 'pulse-glow 2s infinite' : 'none'
                     }}
                 >
@@ -298,7 +299,7 @@ export default function GroupRandomizer({
                         </div>
                         <p
                             className="text-center mt-2"
-                            style={{ fontSize: '0.4rem', color: 'var(--text-secondary)' }}
+                            style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}
                         >
                             {currentStep} / {animationMembers.length}
                         </p>
@@ -326,7 +327,7 @@ export default function GroupRandomizer({
                                         style={{ background: group.color }}
                                     />
                                     {group.name}
-                                    <span style={{ color: 'var(--text-secondary)', fontSize: '0.4rem' }}>
+                                    <span style={{ color: 'var(--text-secondary)', fontSize: '0.75rem' }}>
                                         ({group.members.length})
                                     </span>
                                 </h3>
@@ -336,7 +337,7 @@ export default function GroupRandomizer({
                                             key={member.id}
                                             className="text-xs py-1 px-2 animate-pop-in"
                                             style={{
-                                                fontSize: '0.5rem',
+                                                fontSize: '0.85rem',
                                                 background: 'var(--bg-secondary)',
                                                 animationDelay: `${i * 0.1}s`
                                             }}
@@ -346,7 +347,7 @@ export default function GroupRandomizer({
                                     ))}
                                     {group.members.length === 0 && (
                                         <p
-                                            style={{ fontSize: '0.4rem', color: 'var(--text-secondary)' }}
+                                            style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}
                                         >
                                             Menunggu...
                                         </p>
@@ -357,20 +358,26 @@ export default function GroupRandomizer({
                     </div>
                 )}
 
-                {/* Export Button */}
+                {/* Export Buttons */}
                 {groups.length > 0 && !isAnimating && groups[0].members.length > 0 && (
                     <div className="flex gap-3">
                         <button
                             onClick={startRandomize}
                             className="retro-btn retro-btn-secondary flex-1"
                         >
-                            🔄 Acak Ulang
+                            🔄 Ulang
                         </button>
                         <button
                             onClick={exportGroups}
                             className="retro-btn retro-btn-success flex-1"
                         >
-                            📤 Export TXT
+                            📤 TXT
+                        </button>
+                        <button
+                            onClick={() => exportGroupsToPdf(groups, members.length, groupCount)}
+                            className="retro-btn retro-btn-success flex-1"
+                        >
+                            📄 PDF
                         </button>
                     </div>
                 )}

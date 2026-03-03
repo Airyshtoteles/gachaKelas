@@ -135,8 +135,8 @@ const WheelComponent = forwardRef(({
                         x={textX}
                         y={textY}
                         fill="#000"
-                        fontSize={Math.min(12, 120 / members.length)}
-                        fontFamily="'Press Start 2P', cursive"
+                        fontSize={Math.min(14, 140 / members.length)}
+                        fontFamily="'Inter', sans-serif"
                         textAnchor="middle"
                         dominantBaseline="middle"
                         transform={`rotate(${textAngle + 90}, ${textX}, ${textY})`}
@@ -212,8 +212,8 @@ const WheelComponent = forwardRef(({
                             x={center}
                             y={center}
                             fill="var(--accent-primary)"
-                            fontSize="10"
-                            fontFamily="'Press Start 2P', cursive"
+                            fontSize="12"
+                            fontFamily="'Inter', sans-serif"
                             textAnchor="middle"
                             dominantBaseline="middle"
                         >
@@ -229,7 +229,7 @@ const WheelComponent = forwardRef(({
                 disabled={isSpinning || members.length < 2}
                 className="retro-btn text-lg px-8 py-4"
                 style={{
-                    fontSize: '0.9rem',
+                    fontSize: '1.1rem',
                     animation: !isSpinning && members.length >= 2 ? 'pulse-glow 2s infinite' : 'none'
                 }}
             >

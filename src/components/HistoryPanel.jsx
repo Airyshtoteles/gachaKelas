@@ -30,7 +30,7 @@ export default function HistoryPanel({
                     onClick={onUndo}
                     disabled={history.length === 0}
                     className="retro-btn retro-btn-secondary flex-1"
-                    style={{ fontSize: '0.5rem' }}
+                    style={{ fontSize: '0.85rem' }}
                 >
                     ↩️ Undo
                 </button>
@@ -38,7 +38,7 @@ export default function HistoryPanel({
                     onClick={onReset}
                     disabled={history.length === 0}
                     className="retro-btn retro-btn-danger flex-1"
-                    style={{ fontSize: '0.5rem' }}
+                    style={{ fontSize: '0.85rem' }}
                 >
                     ♻️ Reset
                 </button>
@@ -70,7 +70,7 @@ export default function HistoryPanel({
                             </div>
                             <div
                                 className="mt-1 flex justify-between"
-                                style={{ fontSize: '0.4rem', color: 'var(--text-secondary)' }}
+                                style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}
                             >
                                 <span>{new Date(item.timestamp).toLocaleTimeString()}</span>
                                 <span>Seed: {item.seed}</span>
@@ -85,7 +85,7 @@ export default function HistoryPanel({
                 onClick={handleExport}
                 disabled={history.length === 0}
                 className="retro-btn retro-btn-secondary w-full mt-4"
-                style={{ fontSize: '0.5rem' }}
+                style={{ fontSize: '0.85rem' }}
             >
                 📤 Export TXT
             </button>

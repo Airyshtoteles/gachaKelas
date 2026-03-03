@@ -1,3 +1,65 @@
+import { jsPDF } from 'jspdf';
+
+// Export groups to PDF
+export function exportGroupsToPdf(groups, totalMembers, groupCount) {
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+
+    // Title
+    doc.setFontSize(20);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Hasil Pembagian Kelompok', pageWidth / 2, 22, { align: 'center' });
+
+    // Divider
+    doc.setDrawColor(200, 200, 200);
+    doc.setLineWidth(0.5);
+    doc.line(20, 27, pageWidth - 20, 27);
+
+    // Info
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(100, 100, 100);
+    doc.text(`Total: ${totalMembers} anggota - ${groupCount} kelompok`, pageWidth / 2, 34, { align: 'center' });
+    doc.text(`Waktu: ${new Date().toLocaleString()}`, pageWidth / 2, 40, { align: 'center' });
+
+    let y = 52;
+
+    groups.forEach((group) => {
+        // Check if we need a new page
+        const estimatedHeight = 12 + group.members.length * 8;
+        if (y + estimatedHeight > 275) {
+            doc.addPage();
+            y = 20;
+        }
+
+        // Group header
+        doc.setFontSize(13);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(40, 40, 40);
+        doc.text(`${group.name} (${group.members.length} orang)`, 20, y);
+        y += 3;
+
+        // Underline
+        doc.setDrawColor(233, 69, 96);
+        doc.setLineWidth(0.8);
+        doc.line(20, y, 80, y);
+        y += 7;
+
+        // Members
+        doc.setFontSize(11);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(60, 60, 60);
+        group.members.forEach((member, i) => {
+            doc.text(`${i + 1}. ${member.name}`, 25, y);
+            y += 7;
+        });
+
+        y += 8;
+    });
+
+    doc.save(`kelompok-${Date.now()}.pdf`);
+}
+
 // Export history to TXT file
 export function exportToTxt(history) {
     const lines = [
